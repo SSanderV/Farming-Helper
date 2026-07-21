@@ -273,6 +273,14 @@ public class EasyFarmingOverlay extends Overlay {
         return FRUIT_TREE_SAPLING_IDS.contains(itemId);
     }
 
+    public List<Integer> getHardwoodSaplingIds() {
+        return Constants.HARDWOOD_SAPLING_IDS;
+    }
+
+    private boolean isHardwoodSapling(int itemId) {
+        return Constants.HARDWOOD_SAPLING_IDS.contains(itemId);
+    }
+
     public static final List<Integer> RUNE_POUCH_ID = Arrays.asList(ItemID.BH_RUNE_POUCH, ItemID.DIVINE_RUNE_POUCH);
 
     public static final List<Integer> RUNE_POUCH_AMOUNT_VARBITS = Arrays.asList(VarbitID.RUNE_POUCH_QUANTITY_1,
@@ -702,8 +710,10 @@ public class EasyFarmingOverlay extends Overlay {
             int totalAllotmentSeeds = 0;
             int totalTreeSaplings = 0;
             int totalFruitTreeSaplings = 0;
+            int totalHardwoodSaplings = 0;
             int totalHopsSeeds = 0;
             int totalFlowerSeeds = 0;
+            int digsitePendantCount = 0;
             boolean customRun = plugin.getFarmingTeleportOverlay().isCustomRunMode();
             if (customRun) {
                 for (Item item : items) {
@@ -715,6 +725,9 @@ public class EasyFarmingOverlay extends Overlay {
                     }
                     if (isFlowerSeed(item.getId())) {
                         totalFlowerSeeds += item.getQuantity();
+                    }
+                    if (Constants.DIGSITE_PENDANT_IDS.contains(item.getId())) {
+                        digsitePendantCount += item.getQuantity();
                     }
                 }
             }
@@ -729,6 +742,13 @@ public class EasyFarmingOverlay extends Overlay {
                 for (Item item : items) {
                     if (isFruitTreeSapling(item.getId())) {
                         totalFruitTreeSaplings += item.getQuantity();
+                    }
+                }
+            }
+            if (customRun) {
+                for (Item item : items) {
+                    if (isHardwoodSapling(item.getId())) {
+                        totalHardwoodSaplings += item.getQuantity();
                     }
                 }
             }
@@ -856,6 +876,8 @@ public class EasyFarmingOverlay extends Overlay {
                     inventoryCount = totalTreeSaplings;
                 } else if (customRun && itemId == BASE_FRUIT_SAPLING_ID) {
                     inventoryCount = totalFruitTreeSaplings;
+                } else if (customRun && itemId == Constants.BASE_HARDWOOD_SAPLING_ID) {
+                    inventoryCount = totalHardwoodSaplings;
                 } else if (customRun && itemId == BASE_HOPS_SEED_ID) {
                     inventoryCount = totalHopsSeeds;
                 } else if (itemId == BASE_TELEPORT_CRYSTAL_ID) {
@@ -865,6 +887,8 @@ public class EasyFarmingOverlay extends Overlay {
                     inventoryCount = skillsNecklaceCharges;
                 } else if (itemId == BASE_NECKLACE_OF_PASSAGE_ID) {
                     inventoryCount = necklaceOfPassageCharges;
+                } else if (itemId == Constants.BASE_DIGSITE_PENDANT_ID) {
+                    inventoryCount = digsitePendantCount;
                 } else if (itemId == ItemID.HG_QUETZALWHISTLE_BASIC) {
                     inventoryCount = quetzalWhistleCount;
                 } else if (itemId == BASE_EXPLORERS_RING_ID) {
@@ -977,6 +1001,8 @@ public class EasyFarmingOverlay extends Overlay {
                             itemName = missingCount == 1 ? "tree sapling" : "tree saplings";
                         } else if (isFruitTreeSapling(itemId)) {
                             itemName = missingCount == 1 ? "fruit tree sapling" : "fruit tree saplings";
+                        } else if (isHardwoodSapling(itemId)) {
+                            itemName = missingCount == 1 ? "hardwood sapling" : "hardwood saplings";
                         } else if (isHerbSeed(itemId)) {
                             itemName = missingCount == 1 ? "herb seed" : "herb seeds";
                         } else if (isFlowerSeed(itemId)) {
@@ -1100,6 +1126,11 @@ public class EasyFarmingOverlay extends Overlay {
         if (isHerbSeed(itemId) ||
                 isTreeSapling(itemId) ||
                 isFruitTreeSapling(itemId) ||
+                isHardwoodSapling(itemId) ||
+                itemId == Constants.CALQUAT_SAPLING_ID ||
+                itemId == Constants.CELASTRUS_SAPLING_ID ||
+                itemId == Constants.CRYSTAL_TREE_SAPLING_ID ||
+                itemId == Constants.REDWOOD_SAPLING_ID ||
                 isHopsSeed(itemId) ||
                 isAllotmentSeed(itemId) ||
                 isFlowerSeed(itemId)) {
@@ -1118,6 +1149,7 @@ public class EasyFarmingOverlay extends Overlay {
         if (itemId == BASE_SEED_ID ||
                 itemId == BASE_SAPLING_ID ||
                 itemId == BASE_FRUIT_SAPLING_ID ||
+                itemId == Constants.BASE_HARDWOOD_SAPLING_ID ||
                 itemId == BASE_HOPS_SEED_ID ||
                 itemId == BASE_ALLOTMENT_SEED_ID) {
             return true;

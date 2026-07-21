@@ -167,8 +167,10 @@ public class ItemHighlighter {
                 || isArdyCloakHighlight(itemId, targetId)
                 || isSkillsNecklaceHighlight(itemId, targetId)
                 || isNecklaceOfPassageHighlight(itemId, targetId)
+                || isDigsitePendantHighlight(itemId, targetId)
                 || isBottomlessBucketHighlight(itemId, targetId)
-                || isCombatBraceletHighlight(itemId, targetId);
+                || isCombatBraceletHighlight(itemId, targetId)
+                || isHardwoodSaplingHighlight(itemId, targetId);
     }
 
     private boolean itemMatchesAny(int itemId, Set<Integer> targetIds) {
@@ -209,6 +211,11 @@ public class ItemHighlighter {
     private boolean isNecklaceOfPassageHighlight(int itemId, int targetId) {
         return farmingHelperOverlay.isNecklaceOfPassage(itemId) && farmingHelperOverlay.isNecklaceOfPassage(targetId);
     }
+
+    private boolean isDigsitePendantHighlight(int itemId, int targetId) {
+        return Constants.DIGSITE_PENDANT_IDS.contains(itemId)
+                && Constants.DIGSITE_PENDANT_IDS.contains(targetId);
+    }
     
     /**
      * Checks if an item ID matches a bottomless compost bucket highlight pattern (empty or filled tiers).
@@ -226,6 +233,11 @@ public class ItemHighlighter {
      */
     private boolean isCombatBraceletHighlight(int itemId, int targetId) {
         return farmingHelperOverlay.isCombatBracelet(itemId) && farmingHelperOverlay.isCombatBracelet(targetId);
+    }
+
+    private boolean isHardwoodSaplingHighlight(int itemId, int targetId) {
+        return farmingHelperOverlay.getHardwoodSaplingIds().contains(itemId)
+                && farmingHelperOverlay.getHardwoodSaplingIds().contains(targetId);
     }
     
     /**
