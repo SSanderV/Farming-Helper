@@ -85,6 +85,10 @@ public class PatchHighlighter {
     }
 
     public void highlightSpecificSpecialTreePatch(Graphics2D graphics, int objectId, Color color) {
+        if (objectId == Constants.FARMING_GUILD_REDWOOD_ROOT_OBJECT_ID) {
+            gameObjectHighlighter.renderGameObjectHighlights(graphics, Constants.FARMING_GUILD_REDWOOD_ROOT_OBJECT_IDS, color);
+            return;
+        }
         gameObjectHighlighter.renderGameObjectHighlight(graphics, objectId, color);
     }
 
@@ -126,7 +130,7 @@ public class PatchHighlighter {
         } else if (PatchTypes.CRYSTAL_TREE.equals(patchType)) {
             gameObjectHighlighter.renderGameObjectHighlight(graphics, Constants.PRIFDDINAS_CRYSTAL_TREE_ROOT_OBJECT_ID, color);
         } else if (PatchTypes.REDWOOD.equals(patchType)) {
-            gameObjectHighlighter.renderGameObjectHighlight(graphics, Constants.FARMING_GUILD_REDWOOD_ROOT_OBJECT_ID, color);
+            gameObjectHighlighter.renderGameObjectHighlights(graphics, Constants.FARMING_GUILD_REDWOOD_ROOT_OBJECT_IDS, color);
         }
     }
     

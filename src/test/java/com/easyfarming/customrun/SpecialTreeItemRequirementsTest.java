@@ -10,6 +10,7 @@ import net.runelite.api.gameval.ItemID;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class SpecialTreeItemRequirementsTest {
 
@@ -49,6 +50,18 @@ public class SpecialTreeItemRequirementsTest {
 
         assertEquals(Integer.valueOf(1), requirements.get(ItemID.BUCKET_COMPOST));
         assertEquals(Integer.valueOf(3000), requirements.get(ItemID.COINS));
+    }
+
+    @Test
+    public void normalizesEveryQuetzalWhistleVariant() {
+        assertTrue(Constants.isQuetzalWhistle(ItemID.HG_QUETZALWHISTLE_PERFECTED_INFINITE));
+
+        List<RunLocation> locations = Arrays.asList(
+                location("Locus Oasis", "Quetzal_whistle", PatchTypes.HARDWOOD));
+        Map<Integer, Integer> requirements = CustomRunItemRequirements.buildRequirements(
+                catalog, new EasyFarmingConfig() { }, null, locations, false, false, false);
+
+        assertEquals(Integer.valueOf(1), requirements.get(ItemID.HG_QUETZALWHISTLE_BASIC));
     }
 
     private Map<Integer, Integer> requirements(boolean payForProtection) {

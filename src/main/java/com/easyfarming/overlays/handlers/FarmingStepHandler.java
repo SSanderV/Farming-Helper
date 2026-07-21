@@ -40,6 +40,7 @@ public class FarmingStepHandler {
     private final PatchStateChecker patchStateChecker;
     private final ColorProvider colorProvider;
     private final GameObjectHighlighter gameObjectHighlighter;
+    private final NPCHighlighter npcHighlighter;
     
     // State tracking
     public boolean herbPatchDone = false;
@@ -71,7 +72,7 @@ public class FarmingStepHandler {
                               ItemHighlighter itemHighlighter, CompostHighlighter compostHighlighter,
                               FarmerHighlighter farmerHighlighter, PatchStateChecker patchStateChecker,
                               ColorProvider colorProvider, EasyFarmingOverlay farmingHelperOverlay,
-                              GameObjectHighlighter gameObjectHighlighter) {
+                              GameObjectHighlighter gameObjectHighlighter, NPCHighlighter npcHighlighter) {
         this.client = client;
         this.plugin = plugin;
         this.config = config;
@@ -84,6 +85,7 @@ public class FarmingStepHandler {
         this.colorProvider = colorProvider;
         this.farmingHelperOverlay = farmingHelperOverlay;
         this.gameObjectHighlighter = gameObjectHighlighter;
+        this.npcHighlighter = npcHighlighter;
     }
     
     /**
@@ -1067,8 +1069,8 @@ public class FarmingStepHandler {
         if (PatchTypes.HARDWOOD.equals(patchType) && "Locus Oasis".equals(locationName)
                 && "Quetzal_Transport".equals(teleport.getEnumOption())
                 && Constants.isCivitasQuetzalRegion(currentRegionId)) {
-            plugin.addTextToInfoBox("Fly Renu to Locus Oasis.");
-            gameObjectHighlighter.renderGameObjectHighlight(graphics, Constants.QUETZAL_TRANSPORT_OBJECT_ID, useItemColor);
+            plugin.addTextToInfoBox("Fly Renu to Colossal Wyrm Remains, then run north to the hardwood patch.");
+            npcHighlighter.highlightNpc(graphics, Constants.QUETZAL_COLOSSAL_WYRM_NPC_ID);
             return;
         }
 

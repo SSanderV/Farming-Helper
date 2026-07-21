@@ -46,9 +46,9 @@ public class SpecialTreeLocationCatalogTest {
 
     @Test
     public void specialLocationsProvidePracticalOptionsEndingInNone() {
-        assertOptions("Fossil Island", PatchTypes.HARDWOOD, "Digsite_pendant", "None");
-        assertOptions("Locus Oasis", PatchTypes.HARDWOOD, "Colossal_Wyrm_Teleport", "Fairy_Ring", "Quetzal_Transport", "None");
-        assertOptions("Anglers' Retreat", PatchTypes.HARDWOOD, "Sailors_amulet", "Mythical_cape", "None");
+        assertOptions("Fossil Island", PatchTypes.HARDWOOD, "Digsite_pendant", "Mounted_Digsite_pendant", "None");
+        assertOptions("Locus Oasis", PatchTypes.HARDWOOD, "Colossal_Wyrm_Teleport", "Fairy_Ring", "Quetzal_whistle", "Quetzal_Transport", "None");
+        assertOptions("Anglers' Retreat", PatchTypes.HARDWOOD, "Sailors_amulet", "Mythical_cape", "Mounted_Mythical_cape", "Spirit_Tree", "None");
         assertOptions("Tai Bwo Wannai", PatchTypes.CALQUAT, "Tai_Bwo_Wannai_Teleport", "Brimhaven_POH_Tablet", "Fairy_Ring", "None");
         assertOptions("Kastori", PatchTypes.CALQUAT, "Quetzal_Transport", "Pendant_of_Ates", "None");
         assertOptions("Great Conch", PatchTypes.CALQUAT, "Fairy_Ring", "None");
@@ -68,6 +68,7 @@ public class SpecialTreeLocationCatalogTest {
     public void itemTeleportsExposeTheirRequiredInventoryItems() {
         assertItemRequirement("Fossil Island", PatchTypes.HARDWOOD, "Digsite_pendant", Constants.BASE_DIGSITE_PENDANT_ID);
         assertItemRequirement("Locus Oasis", PatchTypes.HARDWOOD, "Colossal_Wyrm_Teleport", ItemID.TELEPORTSCROLL_COLOSSAL_WYRM);
+        assertItemRequirement("Locus Oasis", PatchTypes.HARDWOOD, "Quetzal_whistle", ItemID.HG_QUETZALWHISTLE_BASIC);
         assertItemRequirement("Anglers' Retreat", PatchTypes.HARDWOOD, "Sailors_amulet", ItemID.SAILORS_AMULET);
         assertItemRequirement("Anglers' Retreat", PatchTypes.HARDWOOD, "Mythical_cape", ItemID.MYTHICAL_CAPE);
         assertItemRequirement("Tai Bwo Wannai", PatchTypes.CALQUAT, "Tai_Bwo_Wannai_Teleport", ItemID.TELEPORTSCROLL_TAIBWO);
@@ -92,6 +93,29 @@ public class SpecialTreeLocationCatalogTest {
     public void kastoriCalquatTransportDescriptionsIdentifyTheCalquatPatch() {
         assertCalquatDescription("Quetzal_Transport");
         assertCalquatDescription("Pendant_of_Ates");
+    }
+
+    @Test
+    public void hardwoodTransportDescriptionsNameTheActualRoute() {
+        assertDescriptionContains("Fossil Island", "Digsite_pendant", "Barge guard");
+        assertDescriptionContains("Locus Oasis", "Quetzal_Transport", "Colossal Wyrm Remains");
+        assertDescriptionContains("Locus Oasis", "Quetzal_whistle", "Colossal Wyrm Remains");
+        assertDescriptionContains("Anglers' Retreat", "Sailors_amulet", "Deepfin Point");
+        assertDescriptionContains("Anglers' Retreat", "Spirit_Tree", "Feldip Hills");
+    }
+
+    @Test
+    public void mountedPohOptionsUseTheConfiguredHouseTeleport() {
+        Teleport mountedDigsite = teleport("Fossil Island", PatchTypes.HARDWOOD, "Mounted_Digsite_pendant");
+        Teleport mountedMythical = teleport("Anglers' Retreat", PatchTypes.HARDWOOD, "Mounted_Mythical_cape");
+
+        assertEquals(Teleport.Category.MOUNTED_POH, mountedDigsite.getCategory());
+        assertEquals(Teleport.Category.MOUNTED_POH, mountedMythical.getCategory());
+        assertEquals(Integer.valueOf(1), mountedDigsite.getItemRequirements().get(ItemID.AIRRUNE));
+        assertEquals(Integer.valueOf(1), mountedDigsite.getItemRequirements().get(ItemID.EARTHRUNE));
+        assertEquals(Integer.valueOf(1), mountedDigsite.getItemRequirements().get(ItemID.LAWRUNE));
+        assertFalse(mountedDigsite.getItemRequirements().containsKey(Constants.BASE_DIGSITE_PENDANT_ID));
+        assertFalse(mountedMythical.getItemRequirements().containsKey(ItemID.MYTHICAL_CAPE));
     }
 
     private void assertRegistered(String locationName, String patchType) {
@@ -127,6 +151,10 @@ public class SpecialTreeLocationCatalogTest {
         String description = teleport("Kastori", PatchTypes.CALQUAT, option).getDescription();
         assertTrue(description.contains("calquat patch"));
         assertFalse(description.contains("fruit tree patch"));
+    }
+
+    private void assertDescriptionContains(String locationName, String option, String expectedText) {
+        assertTrue(teleport(locationName, PatchTypes.HARDWOOD, option).getDescription().contains(expectedText));
     }
 
     private static class TestPlugin extends EasyFarmingPlugin {

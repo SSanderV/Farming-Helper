@@ -7,6 +7,9 @@ import com.easyfarming.SpecialTreePatchChecker.PlantState;
 import com.easyfarming.customrun.PatchTypes;
 import com.easyfarming.utils.Constants;
 import java.util.Arrays;
+import java.util.List;
+import net.runelite.api.gameval.NpcID;
+import net.runelite.api.gameval.ObjectID;
 import org.junit.Test;
 
 public class SpecialTreePatchCheckerTest {
@@ -81,6 +84,36 @@ public class SpecialTreePatchCheckerTest {
         assertStates(PatchTypes.CRYSTAL_TREE, PlantState.HEALTHY, 14);
         assertStates(PatchTypes.CRYSTAL_TREE, PlantState.HARVEST, 15);
         assertStates(PatchTypes.CRYSTAL_TREE, PlantState.UNKNOWN, 4, 7, 16, 255);
+    }
+
+    @Test
+    public void redwoodHighlightIncludesEveryControllerRoot() {
+        List<Integer> objectIds = Constants.FARMING_GUILD_REDWOOD_ROOT_OBJECT_IDS;
+        assertEquals(Arrays.asList(
+                ObjectID.FARMING_REDWOOD_TREE_PATCH_0_1,
+                ObjectID.FARMING_REDWOOD_TREE_PATCH_0_2,
+                ObjectID.FARMING_REDWOOD_TREE_PATCH_0_3,
+                ObjectID.FARMING_REDWOOD_TREE_PATCH_0_4,
+                ObjectID.FARMING_REDWOOD_TREE_PATCH_0_5,
+                ObjectID.FARMING_REDWOOD_TREE_PATCH_0_6,
+                ObjectID.FARMING_REDWOOD_TREE_PATCH_0_7,
+                ObjectID.FARMING_REDWOOD_TREE_PATCH_0_8,
+                ObjectID.FARMING_REDWOOD_TREE_PATCH_0_9,
+                ObjectID.FARMING_REDWOOD_TREE_PATCH_1_1,
+                ObjectID.FARMING_REDWOOD_TREE_PATCH_1_2,
+                ObjectID.FARMING_REDWOOD_TREE_PATCH_1_3,
+                ObjectID.FARMING_REDWOOD_TREE_PATCH_1_4,
+                ObjectID.FARMING_REDWOOD_TREE_PATCH_1_5,
+                ObjectID.FARMING_REDWOOD_TREE_PATCH_1_6,
+                ObjectID.FARMING_REDWOOD_TREE_PATCH_1_7,
+                ObjectID.FARMING_REDWOOD_TREE_PATCH_1_8,
+                ObjectID.FARMING_REDWOOD_TREE_PATCH_1_9,
+                ObjectID.FARMING_REDWOOD_TREE_PATCH_2_1), objectIds);
+    }
+
+    @Test
+    public void colossalWyrmQuetzalHasAnExactNpcTarget() {
+        assertEquals(NpcID.QUETZAL_COLOSSALWYRM, Constants.QUETZAL_COLOSSAL_WYRM_NPC_ID);
     }
 
     private static void assertStates(String patchType, PlantState expected, int... values) {

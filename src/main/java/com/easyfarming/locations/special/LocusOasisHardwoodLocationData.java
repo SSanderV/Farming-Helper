@@ -31,8 +31,14 @@ public final class LocusOasisHardwoodLocationData {
                 Constants.LOCUS_OASIS_HARDWOOD_PATCH_POINT.getRegionID(), Constants.LOCUS_OASIS_HARDWOOD_PATCH_POINT,
                 fairyRingSupplier.get()));
         location.addTeleportOption(new Teleport(
+                "Quetzal_whistle", Teleport.Category.ITEM,
+                "Use a Quetzal whistle, select Colossal Wyrm Remains, then run north to the hardwood patch.",
+                ItemID.HG_QUETZALWHISTLE_BASIC, "", 0, 0,
+                Constants.LOCUS_OASIS_HARDWOOD_PATCH_POINT.getRegionID(), Constants.LOCUS_OASIS_HARDWOOD_PATCH_POINT,
+                Collections.singletonList(new ItemRequirement(ItemID.HG_QUETZALWHISTLE_BASIC, 1))));
+        location.addTeleportOption(new Teleport(
                 "Quetzal_Transport", Teleport.Category.SPELLBOOK,
-                "Teleport to Civitas with the Civitas teleport spell, use the Quetzal Transport System to Locus Oasis, then walk to the hardwood patch.",
+                "Teleport to Civitas with the Civitas teleport spell, use the Quetzal Transport System to Colossal Wyrm Remains, then run north to the hardwood patch.",
                 0, "", Constants.INTERFACE_MAGIC_SPELLBOOK, Constants.SPELL_CHILD_FORTIS_TELEPORT,
                 Constants.LOCUS_OASIS_HARDWOOD_PATCH_POINT.getRegionID(), Constants.LOCUS_OASIS_HARDWOOD_PATCH_POINT,
                 Arrays.asList(new ItemRequirement(ItemID.LAWRUNE, 2), new ItemRequirement(ItemID.EARTHRUNE, 1),

@@ -249,7 +249,7 @@ public class LocationCatalog {
         addPatchTypes(kastoriFruitTree.getName(), singletonList(PatchTypes.FRUIT_TREE));
 
         // Special tree locations (stable order follows normal tree and fruit tree entries).
-        Location fossilIslandHardwood = FossilIslandHardwoodLocationData.create(config);
+        Location fossilIslandHardwood = FossilIslandHardwoodLocationData.create(config, houseTeleportSupplier);
         seenNames.add(fossilIslandHardwood.getName());
         putLocationForPatch(fossilIslandHardwood.getName(), PatchTypes.HARDWOOD, fossilIslandHardwood);
         addTeleports(fossilIslandHardwood.getName(), fossilIslandHardwood);
@@ -261,7 +261,7 @@ public class LocationCatalog {
         addTeleports(locusOasisHardwood.getName(), locusOasisHardwood);
         addPatchTypes(locusOasisHardwood.getName(), singletonList(PatchTypes.HARDWOOD));
 
-        Location anglersRetreatHardwood = AnglersRetreatHardwoodLocationData.create(config);
+        Location anglersRetreatHardwood = AnglersRetreatHardwoodLocationData.create(config, houseTeleportSupplier);
         seenNames.add(anglersRetreatHardwood.getName());
         putLocationForPatch(anglersRetreatHardwood.getName(), PatchTypes.HARDWOOD, anglersRetreatHardwood);
         addTeleports(anglersRetreatHardwood.getName(), anglersRetreatHardwood);

@@ -4,6 +4,7 @@ import com.easyfarming.EasyFarmingPlugin;
 import com.easyfarming.customrun.LocationCatalog;
 import com.easyfarming.customrun.PatchTypes;
 import com.easyfarming.customrun.RunLocation;
+import com.easyfarming.ui.components.WrapLayout;
 import net.runelite.api.gameval.ItemID;
 import net.runelite.client.ui.ColorScheme;
 import net.runelite.client.ui.FontManager;
@@ -31,7 +32,7 @@ public class CustomRunLocationSubPanel extends JPanel {
     private final Runnable onChanged;
 
     private final JComboBox<String> teleportCombo;
-    private final JPanel patchIconsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 6, 4));
+    private final JPanel patchIconsPanel = new JPanel(new WrapLayout(FlowLayout.LEFT, 6, 4));
     private final JPanel contentPanel = new JPanel(new BorderLayout());
     private boolean expanded = false;
     private final JLabel expandCollapseLabel = new JLabel("\u25B6");
@@ -232,7 +233,7 @@ public class CustomRunLocationSubPanel extends JPanel {
             case PatchTypes.HARDWOOD: return ItemID.MAHOGANY_LOGS;
             case PatchTypes.CALQUAT: return ItemID.CALQUAT_FRUIT;
             case PatchTypes.CELASTRUS: return ItemID.CELASTRUS_WOOD;
-            case PatchTypes.CRYSTAL_TREE: return ItemID.PRIF_CRYSTAL_SHARD;
+            case PatchTypes.CRYSTAL_TREE: return ItemID.PRIF_CRYSTAL_SHARD_25;
             case PatchTypes.REDWOOD: return ItemID.REDWOOD_LOGS;
             default: return GRIMY_RANARR_WEED;
         }

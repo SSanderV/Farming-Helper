@@ -263,7 +263,7 @@ public class CustomRunFilterBar extends JPanel {
             case PatchTypes.HARDWOOD: return ItemID.MAHOGANY_LOGS;
             case PatchTypes.CALQUAT: return ItemID.CALQUAT_FRUIT;
             case PatchTypes.CELASTRUS: return ItemID.CELASTRUS_WOOD;
-            case PatchTypes.CRYSTAL_TREE: return ItemID.PRIF_CRYSTAL_SHARD;
+            case PatchTypes.CRYSTAL_TREE: return ItemID.PRIF_CRYSTAL_SHARD_25;
             case PatchTypes.REDWOOD: return ItemID.REDWOOD_LOGS;
             default: return GRIMY_RANARR_WEED;
         }

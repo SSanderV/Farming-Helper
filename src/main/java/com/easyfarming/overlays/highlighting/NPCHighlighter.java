@@ -57,7 +57,7 @@ public class NPCHighlighter {
         if (npcs != null) {
             Color color = colorProvider.getLeftClickColorWithAlpha();
             for (NPC npc : npcs) {
-                if (npc != null && npc.getId() == npcId) {
+                if (npc != null && matchesNpcId(npc, npcId)) {
                     Shape convexHull = npc.getConvexHull();
                     if (convexHull != null) {
                         graphics.setColor(color);
@@ -68,6 +68,11 @@ public class NPCHighlighter {
                 }
             }
         }
+    }
+
+    private static boolean matchesNpcId(NPC npc, int npcId) {
+        return npc.getId() == npcId
+                || (npc.getComposition() != null && npc.getComposition().getId() == npcId);
     }
     
     /**

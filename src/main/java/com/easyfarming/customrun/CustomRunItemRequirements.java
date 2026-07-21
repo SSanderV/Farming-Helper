@@ -234,7 +234,8 @@ public final class CustomRunItemRequirements {
             int quantity = entry.getValue();
             if (itemId == ItemID.SKILLCAPE_CONSTRUCTION || itemId == ItemID.SKILLCAPE_CONSTRUCTION_TRIMMED || itemId == ItemID.SKILLCAPE_MAX) {
                 into.merge(itemId, quantity, (a, b) -> Math.min(1, a + b));
-            } else if (itemId == ItemID.HG_QUETZALWHISTLE_BASIC || itemId == ItemID.HG_QUETZALWHISTLE_ENHANCED || itemId == ItemID.HG_QUETZALWHISTLE_PERFECTED) {
+            } else if (itemId == ItemID.HG_QUETZALWHISTLE_BASIC || itemId == ItemID.HG_QUETZALWHISTLE_ENHANCED
+                    || itemId == ItemID.HG_QUETZALWHISTLE_PERFECTED || itemId == ItemID.HG_QUETZALWHISTLE_PERFECTED_INFINITE) {
                 into.merge(ItemID.HG_QUETZALWHISTLE_BASIC, quantity, (a, b) -> Math.min(1, a + b));
             } else if (itemId == ItemID.SKILLCAPE_HUNTING || itemId == ItemID.SKILLCAPE_HUNTING_TRIMMED) {
                 into.merge(ItemID.SKILLCAPE_HUNTING, quantity, (a, b) -> Math.min(1, a + b));

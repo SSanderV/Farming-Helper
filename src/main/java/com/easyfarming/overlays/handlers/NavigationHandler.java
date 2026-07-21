@@ -40,6 +40,7 @@ public class NavigationHandler {
     private final GameObjectHelper gameObjectHelper;
     private final ColorProvider colorProvider;
     private final FarmingTeleportSceneOverlay farmingTeleportSceneOverlay;
+    private final NPCHighlighter npcHighlighter;
     
     // State tracking
     public int currentTeleportCase = 1;
@@ -52,7 +53,8 @@ public class NavigationHandler {
                             WidgetHighlighter widgetHighlighter, GameObjectHighlighter gameObjectHighlighter,
                             DecorativeObjectHighlighter decorativeObjectHighlighter, MenuHighlighter menuHighlighter,
                             WidgetHelper widgetHelper, GameObjectHelper gameObjectHelper,
-                            ColorProvider colorProvider, FarmingTeleportSceneOverlay farmingTeleportSceneOverlay) {
+                            ColorProvider colorProvider, FarmingTeleportSceneOverlay farmingTeleportSceneOverlay,
+                            NPCHighlighter npcHighlighter) {
         this.client = client;
         this.plugin = plugin;
         this.config = config;
@@ -68,6 +70,7 @@ public class NavigationHandler {
         this.gameObjectHelper = gameObjectHelper;
         this.colorProvider = colorProvider;
         this.farmingTeleportSceneOverlay = farmingTeleportSceneOverlay;
+        this.npcHighlighter = npcHighlighter;
     }
     
     /**
@@ -303,10 +306,19 @@ public class NavigationHandler {
             return;
         }
 
+        if (teleport.getCategory() == Teleport.Category.MOUNTED_POH) {
+            handleMountedPohTeleport(graphics, teleport, location, currentRegionId);
+            return;
+        }
+
         if (teleport != null && "Quetzal_Transport".equals(teleport.getEnumOption())
                 && Constants.isCivitasQuetzalRegion(currentRegionId)
                 && requiresQuetzalFromCivitas(location.getName())) {
-            gameObjectHighlighter.renderGameObjectHighlight(graphics, Constants.QUETZAL_TRANSPORT_OBJECT_ID, leftColor);
+            if ("Locus Oasis".equals(location.getName())) {
+                npcHighlighter.highlightNpc(graphics, Constants.QUETZAL_COLOSSAL_WYRM_NPC_ID);
+            } else {
+                gameObjectHighlighter.renderGameObjectHighlight(graphics, Constants.QUETZAL_TRANSPORT_OBJECT_ID, leftColor);
+            }
             return;
         }
         
@@ -372,6 +384,9 @@ public class NavigationHandler {
                     break;
                 case MOUNTED_XERICS:
                     handleMountedXericsTeleport(graphics, teleport, location, currentRegionId);
+                    break;
+                case MOUNTED_POH:
+                    handleMountedPohTeleport(graphics, teleport, location, currentRegionId);
                     break;
                 case SPELLBOOK:
                     handleSpellbookTeleport(graphics, teleport, currentRegionId);
@@ -520,6 +535,9 @@ public class NavigationHandler {
                 case "Prifddinas":
                     widgetHighlighter.highlightDynamicComponent(graphics, widget, widgetHelper.getChildIndexSpiritTree("Prifddinas"));
                     break;
+                case "Anglers' Retreat":
+                    widgetHighlighter.highlightDynamicComponent(graphics, widget, widgetHelper.getChildIndexSpiritTree("Feldip Hills"));
+                    break;
             }
         }
         if (currentRegionId == teleport.getRegionId()) {
@@ -582,6 +600,33 @@ public class NavigationHandler {
                     }
                 }
                 break;
+        }
+    }
+
+    private void handleMountedPohTeleport(Graphics2D graphics, Teleport teleport, Location location, int currentRegionId) {
+        inHouseCheck();
+        if (currentTeleportCase == 1) {
+            gettingToHouse(graphics);
+            return;
+        }
+
+        Color leftColor = colorProvider.getLeftClickColorWithAlpha();
+        if ("Mounted_Digsite_pendant".equals(teleport.getEnumOption())) {
+            if (!widgetHelper.isInterfaceOpen(Constants.INTERFACE_SPIRIT_TREE, Constants.INTERFACE_SPIRIT_TREE_CHILD)) {
+                Color rightColor = colorProvider.getRightClickColorWithAlpha();
+                gameObjectHighlighter.renderGameObjectHighlights(graphics, Constants.MOUNTED_DIGSITE_PENDANT_OBJECT_IDS, rightColor);
+                menuHighlighter.highlightRightClickOption(graphics, teleport.getRightClickOption());
+            } else {
+                Widget widget = client.getWidget(Constants.INTERFACE_SPIRIT_TREE, Constants.INTERFACE_SPIRIT_TREE_CHILD);
+                widgetHighlighter.highlightDynamicComponent(graphics, widget, 1);
+            }
+        } else if ("Mounted_Mythical_cape".equals(teleport.getEnumOption())) {
+            gameObjectHighlighter.renderGameObjectHighlight(graphics, Constants.MOUNTED_MYTHICAL_CAPE_OBJECT_ID, leftColor);
+        }
+
+        if (hasReachedItemTeleportDestination(location.getName(), teleport.getRegionId(), currentRegionId)) {
+            currentTeleportCase = 1;
+            isAtDestination = true;
         }
     }
     
