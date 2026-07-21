@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
 import net.runelite.api.gameval.ItemID;
+import net.runelite.api.gameval.ObjectID;
 
 public final class AnglersRetreatHardwoodLocationData {
 
@@ -17,6 +18,18 @@ public final class AnglersRetreatHardwoodLocationData {
 
     public static Location create(EasyFarmingConfig config, Supplier<List<ItemRequirement>> houseTeleportSupplier) {
         Location location = new Location(null, config, "Anglers' Retreat", false);
+        location.addTeleportOption(new Teleport(
+                "Fishing_Trawler", Teleport.Category.SPELLBOOK,
+                "Open the Minigame Teleport, select Fishing Trawler (requires 15 Fishing) to reach Port Khazard, take a charter ship to Corsair Cove, then use the repaired rowboat to Anglers' Retreat.",
+                0, "", Constants.INTERFACE_MAGIC_SPELLBOOK, Constants.SPELL_CHILD_MINIGAME_TELEPORT,
+                Constants.ANGLERS_RETREAT_HARDWOOD_PATCH_POINT.getRegionID(), Constants.ANGLERS_RETREAT_HARDWOOD_PATCH_POINT,
+                Collections.emptyList()));
+        location.addTeleportOption(new Teleport(
+                "Rimmington_POH", Teleport.Category.MOUNTED_POH,
+                "Teleport to your house if your house is in Rimmington, exit, run east to the Port Sarim charter ship, charter to Corsair Cove, then use the repaired rowboat to Anglers' Retreat.",
+                ObjectID.POH_EXIT_PORTAL, "", 0, 0,
+                Constants.ANGLERS_RETREAT_HARDWOOD_PATCH_POINT.getRegionID(), Constants.ANGLERS_RETREAT_HARDWOOD_PATCH_POINT,
+                houseTeleportSupplier.get()));
         location.addTeleportOption(new Teleport(
                 "Sailors_amulet", Teleport.Category.ITEM,
                 "Teleport to The Pandemonium with a sailors' amulet, take a charter ship to Corsair Cove, then use the repaired rowboat to Anglers' Retreat. Deepfin Point is faster if unlocked.",

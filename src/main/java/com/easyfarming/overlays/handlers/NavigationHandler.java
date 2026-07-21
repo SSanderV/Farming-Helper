@@ -622,6 +622,8 @@ public class NavigationHandler {
             }
         } else if ("Mounted_Mythical_cape".equals(teleport.getEnumOption())) {
             gameObjectHighlighter.renderGameObjectHighlight(graphics, Constants.MOUNTED_MYTHICAL_CAPE_OBJECT_ID, leftColor);
+        } else if ("Rimmington_POH".equals(teleport.getEnumOption())) {
+            gameObjectHighlighter.renderGameObjectHighlight(graphics, teleport.getId(), leftColor);
         }
 
         if (hasReachedItemTeleportDestination(location.getName(), teleport.getRegionId(), currentRegionId)) {

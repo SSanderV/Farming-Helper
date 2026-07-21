@@ -8,6 +8,7 @@ import com.easyfarming.utils.Constants;
 import java.util.Arrays;
 import java.util.List;
 import net.runelite.api.gameval.ItemID;
+import net.runelite.api.gameval.ObjectID;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -48,7 +49,7 @@ public class SpecialTreeLocationCatalogTest {
     public void specialLocationsProvidePracticalOptionsEndingInNone() {
         assertOptions("Fossil Island", PatchTypes.HARDWOOD, "Digsite_pendant", "Mounted_Digsite_pendant", "None");
         assertOptions("Locus Oasis", PatchTypes.HARDWOOD, "Colossal_Wyrm_Teleport", "Fairy_Ring", "Quetzal_whistle", "Quetzal_Transport", "None");
-        assertOptions("Anglers' Retreat", PatchTypes.HARDWOOD, "Sailors_amulet", "Mythical_cape", "Mounted_Mythical_cape", "Spirit_Tree", "None");
+        assertOptions("Anglers' Retreat", PatchTypes.HARDWOOD, "Fishing_Trawler", "Rimmington_POH", "Sailors_amulet", "Mythical_cape", "Mounted_Mythical_cape", "Spirit_Tree", "None");
         assertOptions("Tai Bwo Wannai", PatchTypes.CALQUAT, "Tai_Bwo_Wannai_Teleport", "Brimhaven_POH_Tablet", "Fairy_Ring", "None");
         assertOptions("Kastori", PatchTypes.CALQUAT, "Quetzal_Transport", "Pendant_of_Ates", "None");
         assertOptions("Great Conch", PatchTypes.CALQUAT, "Fairy_Ring", "None");
@@ -100,6 +101,11 @@ public class SpecialTreeLocationCatalogTest {
         assertDescriptionContains("Fossil Island", "Digsite_pendant", "Barge guard");
         assertDescriptionContains("Locus Oasis", "Quetzal_Transport", "Colossal Wyrm Remains");
         assertDescriptionContains("Locus Oasis", "Quetzal_whistle", "Colossal Wyrm Remains");
+        assertDescriptionContains("Anglers' Retreat", "Fishing_Trawler", "15 Fishing");
+        assertDescriptionContains("Anglers' Retreat", "Fishing_Trawler", "Port Khazard");
+        assertDescriptionContains("Anglers' Retreat", "Fishing_Trawler", "Corsair Cove");
+        assertDescriptionContains("Anglers' Retreat", "Rimmington_POH", "house is in Rimmington");
+        assertDescriptionContains("Anglers' Retreat", "Rimmington_POH", "Port Sarim");
         assertDescriptionContains("Anglers' Retreat", "Sailors_amulet", "The Pandemonium");
         assertDescriptionContains("Anglers' Retreat", "Sailors_amulet", "Deepfin Point");
         assertDescriptionContains("Anglers' Retreat", "Spirit_Tree", "Feldip Hills");
@@ -109,14 +115,30 @@ public class SpecialTreeLocationCatalogTest {
     public void mountedPohOptionsUseTheConfiguredHouseTeleport() {
         Teleport mountedDigsite = teleport("Fossil Island", PatchTypes.HARDWOOD, "Mounted_Digsite_pendant");
         Teleport mountedMythical = teleport("Anglers' Retreat", PatchTypes.HARDWOOD, "Mounted_Mythical_cape");
+        Teleport rimmingtonPoh = teleport("Anglers' Retreat", PatchTypes.HARDWOOD, "Rimmington_POH");
 
         assertEquals(Teleport.Category.MOUNTED_POH, mountedDigsite.getCategory());
         assertEquals(Teleport.Category.MOUNTED_POH, mountedMythical.getCategory());
+        assertEquals(Teleport.Category.MOUNTED_POH, rimmingtonPoh.getCategory());
+        assertEquals(ObjectID.POH_EXIT_PORTAL, rimmingtonPoh.getId());
         assertEquals(Integer.valueOf(1), mountedDigsite.getItemRequirements().get(ItemID.AIRRUNE));
         assertEquals(Integer.valueOf(1), mountedDigsite.getItemRequirements().get(ItemID.EARTHRUNE));
         assertEquals(Integer.valueOf(1), mountedDigsite.getItemRequirements().get(ItemID.LAWRUNE));
         assertFalse(mountedDigsite.getItemRequirements().containsKey(Constants.BASE_DIGSITE_PENDANT_ID));
         assertFalse(mountedMythical.getItemRequirements().containsKey(ItemID.MYTHICAL_CAPE));
+        assertEquals(Integer.valueOf(1), rimmingtonPoh.getItemRequirements().get(ItemID.AIRRUNE));
+        assertEquals(Integer.valueOf(1), rimmingtonPoh.getItemRequirements().get(ItemID.EARTHRUNE));
+        assertEquals(Integer.valueOf(1), rimmingtonPoh.getItemRequirements().get(ItemID.LAWRUNE));
+    }
+
+    @Test
+    public void fishingTrawlerUsesTheMinigameTeleportSpell() {
+        Teleport fishingTrawler = teleport("Anglers' Retreat", PatchTypes.HARDWOOD, "Fishing_Trawler");
+
+        assertEquals(Teleport.Category.SPELLBOOK, fishingTrawler.getCategory());
+        assertEquals(Constants.INTERFACE_MAGIC_SPELLBOOK, fishingTrawler.getInterfaceGroupId());
+        assertEquals(Constants.SPELL_CHILD_MINIGAME_TELEPORT, fishingTrawler.getInterfaceChildId());
+        assertTrue(fishingTrawler.getItemRequirements().isEmpty());
     }
 
     private void assertRegistered(String locationName, String patchType) {

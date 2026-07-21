@@ -111,10 +111,6 @@ public class Constants {
     public static final int FARMING_GUILD_CELASTRUS_ROOT_OBJECT_ID = ObjectID.FARMING_CELASTRUS_PATCH_1;
     public static final int PRIFDDINAS_CRYSTAL_TREE_ROOT_OBJECT_ID = ObjectID.FARMING_CRYSTAL_TREE_PATCH_1;
     public static final int FARMING_GUILD_REDWOOD_ROOT_OBJECT_ID = ObjectID.FARMING_REDWOOD_TREE_PATCH_0_1;
-    public static final List<Integer> FARMING_GUILD_REDWOOD_ROOT_OBJECT_IDS = Collections.unmodifiableList(Arrays.asList(
-            ObjectID.FARMING_REDWOOD_TREE_PATCH_0_5,
-            ObjectID.FARMING_REDWOOD_TREE_PATCH_1_5,
-            ObjectID.FARMING_REDWOOD_TREE_PATCH_2_1));
     public static final List<Integer> MOUNTED_DIGSITE_PENDANT_OBJECT_IDS = Collections.unmodifiableList(Arrays.asList(
             ObjectID.POH_AMULET_DIG_DIGSITE,
             ObjectID.POH_AMULET_DIG_FOSSIL,
@@ -161,11 +157,16 @@ public class Constants {
     public static final int INTERFACE_FARMER = 219;
     public static final int INTERFACE_INVENTORY = 149;
     public static final int INTERFACE_MAGIC_SPELLBOOK = 218;
+    public static final int INTERFACE_GROUPING = 76;
+    public static final int GROUPING_DROPDOWN_CHILD = 6;
+    public static final int GROUPING_TELEPORT_CHILD = 32;
+    public static final int GROUPING_FISHING_TRAWLER_GAME_ID = 8;
 
     /**
      * Standard spellbook teleport widget child ids (interface 218).
      * Values match RuneLite {@code InterfaceID} spellbook children after the minigame teleport spell was added.
      */
+    public static final int SPELL_CHILD_MINIGAME_TELEPORT = 7;
     public static final int SPELL_CHILD_VARROCK_TELEPORT = 26;
     public static final int SPELL_CHILD_LUMBRIDGE_TELEPORT = 29;
     public static final int SPELL_CHILD_FALADOR_TELEPORT = 32;
