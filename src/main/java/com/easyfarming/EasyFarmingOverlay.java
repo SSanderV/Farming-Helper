@@ -730,6 +730,11 @@ public class EasyFarmingOverlay extends Overlay {
                         digsitePendantCount += item.getQuantity();
                     }
                 }
+                for (Map.Entry<Integer, Integer> equippedEntry : equippedItems.entrySet()) {
+                    if (Constants.DIGSITE_PENDANT_IDS.contains(equippedEntry.getKey())) {
+                        digsitePendantCount += equippedEntry.getValue();
+                    }
+                }
             }
             if (customRun) {
                 for (Item item : items) {

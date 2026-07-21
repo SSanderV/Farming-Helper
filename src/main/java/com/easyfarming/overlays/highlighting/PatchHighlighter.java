@@ -121,6 +121,13 @@ public class PatchHighlighter {
                     return;
             }
         }
+        if (PatchTypes.CELASTRUS.equals(patchType)) {
+            gameObjectHighlighter.renderGameObjectHighlight(graphics, Constants.FARMING_GUILD_CELASTRUS_ROOT_OBJECT_ID, color);
+        } else if (PatchTypes.CRYSTAL_TREE.equals(patchType)) {
+            gameObjectHighlighter.renderGameObjectHighlight(graphics, Constants.PRIFDDINAS_CRYSTAL_TREE_ROOT_OBJECT_ID, color);
+        } else if (PatchTypes.REDWOOD.equals(patchType)) {
+            gameObjectHighlighter.renderGameObjectHighlight(graphics, Constants.FARMING_GUILD_REDWOOD_ROOT_OBJECT_ID, color);
+        }
     }
     
     public void highlightHopsPatches(Graphics2D graphics, Color color) {

@@ -1304,6 +1304,15 @@ public class FarmingStepHandler {
                     return -1;
             }
         }
+        if (PatchTypes.CELASTRUS.equals(patchType)) {
+            return Constants.FARMING_GUILD_CELASTRUS_ROOT_OBJECT_ID;
+        }
+        if (PatchTypes.CRYSTAL_TREE.equals(patchType)) {
+            return Constants.PRIFDDINAS_CRYSTAL_TREE_ROOT_OBJECT_ID;
+        }
+        if (PatchTypes.REDWOOD.equals(patchType)) {
+            return Constants.FARMING_GUILD_REDWOOD_ROOT_OBJECT_ID;
+        }
         return -1;
     }
 
