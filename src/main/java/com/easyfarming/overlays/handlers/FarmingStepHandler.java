@@ -1070,7 +1070,7 @@ public class FarmingStepHandler {
                 && "Quetzal_Transport".equals(teleport.getEnumOption())
                 && Constants.isCivitasQuetzalRegion(currentRegionId)) {
             plugin.addTextToInfoBox("Fly Renu to Colossal Wyrm Remains, then run north to the hardwood patch.");
-            npcHighlighter.highlightNpc(graphics, Constants.QUETZAL_COLOSSAL_WYRM_NPC_ID);
+            npcHighlighter.highlightNpc(graphics, Constants.QUETZAL_RENU_NPC_NAME);
             return;
         }
 

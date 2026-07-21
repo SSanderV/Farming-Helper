@@ -315,7 +315,7 @@ public class NavigationHandler {
                 && Constants.isCivitasQuetzalRegion(currentRegionId)
                 && requiresQuetzalFromCivitas(location.getName())) {
             if ("Locus Oasis".equals(location.getName())) {
-                npcHighlighter.highlightNpc(graphics, Constants.QUETZAL_COLOSSAL_WYRM_NPC_ID);
+                npcHighlighter.highlightNpc(graphics, Constants.QUETZAL_RENU_NPC_NAME);
             } else {
                 gameObjectHighlighter.renderGameObjectHighlight(graphics, Constants.QUETZAL_TRANSPORT_OBJECT_ID, leftColor);
             }

@@ -37,7 +37,7 @@ public class Constants {
     public static final int REGION_CIVITAS_QUETZAL_ALT = 6705;
     /** Quetzal Transport System object at Civitas (Renu and other birds). */
     public static final int QUETZAL_TRANSPORT_OBJECT_ID = 52815;
-    public static final int QUETZAL_COLOSSAL_WYRM_NPC_ID = NpcID.QUETZAL_COLOSSALWYRM;
+    public static final String QUETZAL_RENU_NPC_NAME = "Renu";
     /** Auburnvale (Nemus Retreat tree patch); see RuneLite {@code FarmingWorld}. */
     public static final int REGION_AUBURNVALE = 5427;
     public static final int REGION_AUBURNVALE_ALT1 = 5428;
@@ -112,24 +112,8 @@ public class Constants {
     public static final int PRIFDDINAS_CRYSTAL_TREE_ROOT_OBJECT_ID = ObjectID.FARMING_CRYSTAL_TREE_PATCH_1;
     public static final int FARMING_GUILD_REDWOOD_ROOT_OBJECT_ID = ObjectID.FARMING_REDWOOD_TREE_PATCH_0_1;
     public static final List<Integer> FARMING_GUILD_REDWOOD_ROOT_OBJECT_IDS = Collections.unmodifiableList(Arrays.asList(
-            ObjectID.FARMING_REDWOOD_TREE_PATCH_0_1,
-            ObjectID.FARMING_REDWOOD_TREE_PATCH_0_2,
-            ObjectID.FARMING_REDWOOD_TREE_PATCH_0_3,
-            ObjectID.FARMING_REDWOOD_TREE_PATCH_0_4,
             ObjectID.FARMING_REDWOOD_TREE_PATCH_0_5,
-            ObjectID.FARMING_REDWOOD_TREE_PATCH_0_6,
-            ObjectID.FARMING_REDWOOD_TREE_PATCH_0_7,
-            ObjectID.FARMING_REDWOOD_TREE_PATCH_0_8,
-            ObjectID.FARMING_REDWOOD_TREE_PATCH_0_9,
-            ObjectID.FARMING_REDWOOD_TREE_PATCH_1_1,
-            ObjectID.FARMING_REDWOOD_TREE_PATCH_1_2,
-            ObjectID.FARMING_REDWOOD_TREE_PATCH_1_3,
-            ObjectID.FARMING_REDWOOD_TREE_PATCH_1_4,
             ObjectID.FARMING_REDWOOD_TREE_PATCH_1_5,
-            ObjectID.FARMING_REDWOOD_TREE_PATCH_1_6,
-            ObjectID.FARMING_REDWOOD_TREE_PATCH_1_7,
-            ObjectID.FARMING_REDWOOD_TREE_PATCH_1_8,
-            ObjectID.FARMING_REDWOOD_TREE_PATCH_1_9,
             ObjectID.FARMING_REDWOOD_TREE_PATCH_2_1));
     public static final List<Integer> MOUNTED_DIGSITE_PENDANT_OBJECT_IDS = Collections.unmodifiableList(Arrays.asList(
             ObjectID.POH_AMULET_DIG_DIGSITE,

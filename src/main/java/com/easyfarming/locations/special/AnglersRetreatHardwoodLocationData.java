@@ -19,7 +19,7 @@ public final class AnglersRetreatHardwoodLocationData {
         Location location = new Location(null, config, "Anglers' Retreat", false);
         location.addTeleportOption(new Teleport(
                 "Sailors_amulet", Teleport.Category.ITEM,
-                "Teleport to Deepfin Point with a sailors' amulet, take a charter ship to Corsair Cove, then use the repaired rowboat to Anglers' Retreat.",
+                "Teleport to The Pandemonium with a sailors' amulet, take a charter ship to Corsair Cove, then use the repaired rowboat to Anglers' Retreat. Deepfin Point is faster if unlocked.",
                 ItemID.SAILORS_AMULET, "", 0, 0,
                 Constants.ANGLERS_RETREAT_HARDWOOD_PATCH_POINT.getRegionID(), Constants.ANGLERS_RETREAT_HARDWOOD_PATCH_POINT,
                 Collections.singletonList(new ItemRequirement(ItemID.SAILORS_AMULET, 1))));

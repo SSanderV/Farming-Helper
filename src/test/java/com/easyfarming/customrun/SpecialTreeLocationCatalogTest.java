@@ -100,6 +100,7 @@ public class SpecialTreeLocationCatalogTest {
         assertDescriptionContains("Fossil Island", "Digsite_pendant", "Barge guard");
         assertDescriptionContains("Locus Oasis", "Quetzal_Transport", "Colossal Wyrm Remains");
         assertDescriptionContains("Locus Oasis", "Quetzal_whistle", "Colossal Wyrm Remains");
+        assertDescriptionContains("Anglers' Retreat", "Sailors_amulet", "The Pandemonium");
         assertDescriptionContains("Anglers' Retreat", "Sailors_amulet", "Deepfin Point");
         assertDescriptionContains("Anglers' Retreat", "Spirit_Tree", "Feldip Hills");
     }
