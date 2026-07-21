@@ -261,10 +261,10 @@ public class CustomRunFilterBar extends JPanel {
             case PatchTypes.FRUIT_TREE: return net.runelite.api.gameval.ItemID.PINEAPPLE;
             case PatchTypes.HOPS: return net.runelite.api.gameval.ItemID.BARLEY;
             case PatchTypes.HARDWOOD: return ItemID.MAHOGANY_LOGS;
-            case PatchTypes.CALQUAT: return ItemID.CALQUAT_TREE_SEED;
-            case PatchTypes.CELASTRUS: return ItemID.CELASTRUS_TREE_SEED;
-            case PatchTypes.CRYSTAL_TREE: return ItemID.CRYSTAL_TREE_SEED;
-            case PatchTypes.REDWOOD: return ItemID.REDWOOD_TREE_SEED;
+            case PatchTypes.CALQUAT: return ItemID.CALQUAT_FRUIT;
+            case PatchTypes.CELASTRUS: return ItemID.CELASTRUS_WOOD;
+            case PatchTypes.CRYSTAL_TREE: return ItemID.PRIF_CRYSTAL_SHARD;
+            case PatchTypes.REDWOOD: return ItemID.REDWOOD_LOGS;
             default: return GRIMY_RANARR_WEED;
         }
     }
