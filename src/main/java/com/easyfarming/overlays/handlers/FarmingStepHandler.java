@@ -2,6 +2,7 @@ package com.easyfarming.overlays.handlers;
 
 import com.easyfarming.*;
 import com.easyfarming.core.Teleport;
+import com.easyfarming.customrun.PatchTypes;
 import com.easyfarming.overlays.highlighting.*;
 import com.easyfarming.overlays.utils.ColorProvider;
 import com.easyfarming.overlays.utils.PatchStateChecker;
@@ -47,6 +48,7 @@ public class FarmingStepHandler {
     public boolean treePatchDone = false;
     public boolean fruitTreePatchDone = false;
     public boolean hopsPatchDone = false;
+    public boolean specialTreePatchDone = false;
     
     // Persistent compost state tracking (persists until next location)
     private boolean herbPatchComposted = false;
@@ -54,6 +56,9 @@ public class FarmingStepHandler {
     private boolean treePatchComposted = false;
     private boolean fruitTreePatchComposted = false;
     private boolean hopsPatchComposted = false;
+    private boolean specialTreePatchComposted = false;
+    private int fossilIslandPatchIndex = 0;
+    private boolean fossilIslandPlantStepShown = false;
     
     // Allotment patch tracking - which patch we're currently working on (0 = first patch, 1 = second patch)
     private final AllotmentPatchState allotmentPatchState = new AllotmentPatchState();
@@ -1036,6 +1041,339 @@ public class FarmingStepHandler {
         }
     }
     
+    public WorldPoint getCurrentFossilIslandPatchPoint() {
+        switch (fossilIslandPatchIndex) {
+            case 1:
+                return Constants.FOSSIL_ISLAND_HARDWOOD_MIDDLE_PATCH_POINT;
+            case 2:
+                return Constants.FOSSIL_ISLAND_HARDWOOD_WEST_PATCH_POINT;
+            default:
+                return Constants.FOSSIL_ISLAND_HARDWOOD_EAST_PATCH_POINT;
+        }
+    }
+
+    /**
+     * Handles hardwood, calquat, celastrus, crystal tree, and redwood patch steps.
+     */
+    public void specialTreeSteps(Graphics2D graphics, Teleport teleport, String patchType, String locationName) {
+        if (client.getLocalPlayer() == null || teleport == null) {
+            return;
+        }
+
+        int currentRegionId = client.getLocalPlayer().getWorldLocation().getRegionID();
+        Color leftColor = colorProvider.getLeftClickColorWithAlpha();
+        Color useItemColor = colorProvider.getHighlightUseItemWithAlpha();
+
+        if (PatchTypes.HARDWOOD.equals(patchType) && "Locus Oasis".equals(locationName)
+                && "Quetzal_Transport".equals(teleport.getEnumOption())
+                && Constants.isCivitasQuetzalRegion(currentRegionId)) {
+            plugin.addTextToInfoBox("Fly Renu to Locus Oasis.");
+            gameObjectHighlighter.renderGameObjectHighlight(graphics, Constants.QUETZAL_TRANSPORT_OBJECT_ID, useItemColor);
+            return;
+        }
+
+        int varbitId = getSpecialTreeVarbitId(patchType, locationName);
+        SpecialTreePatchChecker.PlantState plantState = varbitId == -1
+                ? SpecialTreePatchChecker.PlantState.UNKNOWN
+                : SpecialTreePatchChecker.checkPatch(client, patchType, varbitId);
+
+        switch (plantState) {
+            case WEEDS:
+                plugin.addTextToInfoBox("Rake the " + getSpecialTreeName(patchType) + " patch.");
+                highlightSpecialTreePatch(graphics, patchType, locationName, leftColor);
+                break;
+            case PLANT:
+                plugin.addTextToInfoBox("Use " + getSpecialTreeName(patchType) + " sapling on the patch.");
+                highlightSpecialTreePatch(graphics, patchType, locationName, useItemColor);
+                highlightSpecialTreeSapling(graphics, patchType, useItemColor);
+                if ("Fossil Island".equals(locationName)) {
+                    fossilIslandPlantStepShown = true;
+                }
+                break;
+            case GROWING:
+                if (handleSpecialTreeAftercare(graphics, patchType, locationName, useItemColor)) {
+                    return;
+                }
+                break;
+            case HEALTHY:
+                plugin.addTextToInfoBox("Check " + getSpecialTreeName(patchType) + " health.");
+                highlightSpecialTreePatch(graphics, patchType, locationName, leftColor);
+                break;
+            case HARVEST:
+                if (PatchTypes.CALQUAT.equals(patchType)) {
+                    plugin.addTextToInfoBox("Harvest calquats, then chop and clear the tree with a spade.");
+                    itemHighlighter.itemHighlight(graphics, ItemID.SPADE, useItemColor);
+                } else if (PatchTypes.CELASTRUS.equals(patchType)) {
+                    plugin.addTextToInfoBox("Harvest celastrus bark with an axe.");
+                } else {
+                    plugin.addTextToInfoBox("Chop the crystal tree.");
+                }
+                highlightSpecialTreePatch(graphics, patchType, locationName, leftColor);
+                break;
+            case CHOP:
+                if (PatchTypes.CELASTRUS.equals(patchType)) {
+                    plugin.addTextToInfoBox("Chop the depleted celastrus tree.");
+                } else {
+                    plugin.addTextToInfoBox("Chop the hardwood tree, or pay the gardener 200 coins to remove it.");
+                    itemHighlighter.itemHighlight(graphics, ItemID.COINS, useItemColor);
+                    highlightSpecialTreeFarmer(graphics, patchType, locationName);
+                }
+                highlightSpecialTreePatch(graphics, patchType, locationName, leftColor);
+                break;
+            case CLEAR:
+                if (PatchTypes.CELASTRUS.equals(patchType)) {
+                    plugin.addTextToInfoBox("Clear the celastrus stump with a spade.");
+                } else {
+                    plugin.addTextToInfoBox("Clear the hardwood stump with a spade.");
+                }
+                itemHighlighter.itemHighlight(graphics, ItemID.SPADE, useItemColor);
+                highlightSpecialTreePatch(graphics, patchType, locationName, leftColor);
+                break;
+            case REMOVE:
+                plugin.addTextToInfoBox("Pay Alexandra 2,000 coins to remove the redwood tree.");
+                itemHighlighter.itemHighlight(graphics, ItemID.COINS, useItemColor);
+                highlightSpecialTreeFarmer(graphics, patchType, locationName);
+                break;
+            case DISEASED:
+                plugin.addTextToInfoBox("Use Plant cure on the " + getSpecialTreeName(patchType) + " patch.");
+                highlightSpecialTreePatch(graphics, patchType, locationName, leftColor);
+                itemHighlighter.itemHighlight(graphics, ItemID.PLANT_CURE, useItemColor);
+                break;
+            case DEAD:
+                plugin.addTextToInfoBox("Clear the dead " + getSpecialTreeName(patchType) + " patch.");
+                highlightSpecialTreePatch(graphics, patchType, locationName, leftColor);
+                itemHighlighter.itemHighlight(graphics, ItemID.SPADE, useItemColor);
+                break;
+            case UNKNOWN:
+                plugin.addTextToInfoBox("UNKNOWN state: Try to do something with the " + getSpecialTreeName(patchType) + " patch.");
+                break;
+        }
+
+        applyPatchDirectionHintArrow(getSpecialTreePatchPoint(patchType, locationName));
+    }
+
+    private boolean handleSpecialTreeAftercare(Graphics2D graphics, String patchType, String locationName, Color useItemColor) {
+        if ("Fossil Island".equals(locationName) && !fossilIslandPlantStepShown) {
+            advanceFossilIslandPatch();
+            return true;
+        }
+
+        boolean useProtection = !PatchTypes.CRYSTAL_TREE.equals(patchType) && config.generalPayForProtection();
+        if (useProtection) {
+            plugin.addTextToInfoBox("Pay to protect the patch.");
+            highlightSpecialTreeFarmer(graphics, patchType, locationName);
+            if (patchStateChecker.patchIsProtected()) {
+                completeSpecialTreePatch(locationName);
+                return true;
+            }
+            return false;
+        }
+
+        if (specialTreePatchComposted || patchStateChecker.patchIsCompostedForSpecialTreePatch(patchType)) {
+            specialTreePatchComposted = true;
+            completeSpecialTreePatch(locationName);
+            return true;
+        }
+
+        plugin.addTextToInfoBox("Use Compost on patch.");
+        highlightSpecialTreePatch(graphics, patchType, locationName, useItemColor);
+        Integer compostId = itemHighlighter.selectedCompostID();
+        if (compostId != null && itemHighlighter.isItemInInventory(compostId)) {
+            itemHighlighter.highlightCompost(graphics, compostId, useItemColor);
+            clearHintArrow();
+        } else {
+            setHintArrowToNPC("Tool Leprechaun");
+            compostHighlighter.withdrawCompost(graphics);
+        }
+        return false;
+    }
+
+    private void completeSpecialTreePatch(String locationName) {
+        clearHintArrow();
+        if ("Fossil Island".equals(locationName)) {
+            advanceFossilIslandPatch();
+        } else {
+            specialTreePatchDone = true;
+        }
+    }
+
+    private void advanceFossilIslandPatch() {
+        specialTreePatchComposted = false;
+        fossilIslandPlantStepShown = false;
+        plugin.clearLastMessage();
+        clearHintArrow();
+        if (fossilIslandPatchIndex < 2) {
+            fossilIslandPatchIndex++;
+        } else {
+            specialTreePatchDone = true;
+        }
+    }
+
+    private void highlightSpecialTreeSapling(Graphics2D graphics, String patchType, Color color) {
+        if (PatchTypes.HARDWOOD.equals(patchType)) {
+            itemHighlighter.itemHighlight(graphics, Constants.BASE_HARDWOOD_SAPLING_ID, color);
+        } else if (PatchTypes.CALQUAT.equals(patchType)) {
+            itemHighlighter.itemHighlight(graphics, Constants.CALQUAT_SAPLING_ID, color);
+        } else if (PatchTypes.CELASTRUS.equals(patchType)) {
+            itemHighlighter.itemHighlight(graphics, Constants.CELASTRUS_SAPLING_ID, color);
+        } else if (PatchTypes.CRYSTAL_TREE.equals(patchType)) {
+            itemHighlighter.itemHighlight(graphics, Constants.CRYSTAL_TREE_SAPLING_ID, color);
+        } else if (PatchTypes.REDWOOD.equals(patchType)) {
+            itemHighlighter.itemHighlight(graphics, Constants.REDWOOD_SAPLING_ID, color);
+        }
+    }
+
+    private void highlightSpecialTreePatch(Graphics2D graphics, String patchType, String locationName, Color color) {
+        int patchObjectId = getSpecialTreePatchObjectId(patchType, locationName);
+        if (patchObjectId != -1) {
+            patchHighlighter.highlightSpecificSpecialTreePatch(graphics, patchObjectId, color);
+        }
+    }
+
+    private void highlightSpecialTreeFarmer(Graphics2D graphics, String patchType, String locationName) {
+        int gardenerNpcId = getSpecialTreeGardenerNpcId(patchType, locationName);
+        if (gardenerNpcId != -1) {
+            farmerHighlighter.highlightFarmer(graphics, gardenerNpcId);
+            setHintArrowToNPC(gardenerNpcId);
+        }
+    }
+
+    private int getSpecialTreeVarbitId(String patchType, String locationName) {
+        if (PatchTypes.HARDWOOD.equals(patchType)) {
+            switch (locationName) {
+                case "Fossil Island":
+                    return fossilIslandPatchIndex == 0 ? Constants.VARBIT_FOSSIL_ISLAND_HARDWOOD_EAST_PATCH
+                            : fossilIslandPatchIndex == 1 ? Constants.VARBIT_FOSSIL_ISLAND_HARDWOOD_MIDDLE_PATCH
+                            : Constants.VARBIT_FOSSIL_ISLAND_HARDWOOD_WEST_PATCH;
+                case "Locus Oasis":
+                    return Constants.VARBIT_LOCUS_OASIS_HARDWOOD_PATCH;
+                case "Anglers' Retreat":
+                    return Constants.VARBIT_ANGLERS_RETREAT_HARDWOOD_PATCH;
+                default:
+                    return -1;
+            }
+        }
+        if (PatchTypes.CALQUAT.equals(patchType)) {
+            switch (locationName) {
+                case "Tai Bwo Wannai":
+                    return Constants.VARBIT_TAI_BWO_WANNAI_CALQUAT_PATCH;
+                case "Kastori":
+                    return Constants.VARBIT_KASTORI_CALQUAT_PATCH;
+                case "Great Conch":
+                    return Constants.VARBIT_GREAT_CONCH_CALQUAT_PATCH;
+                default:
+                    return -1;
+            }
+        }
+        if (PatchTypes.CELASTRUS.equals(patchType)) {
+            return Constants.VARBIT_FARMING_GUILD_CELASTRUS_PATCH;
+        }
+        if (PatchTypes.CRYSTAL_TREE.equals(patchType)) {
+            return Constants.VARBIT_PRIFDDINAS_CRYSTAL_TREE_PATCH;
+        }
+        if (PatchTypes.REDWOOD.equals(patchType)) {
+            return Constants.VARBIT_FARMING_GUILD_REDWOOD_PATCH;
+        }
+        return -1;
+    }
+
+    private int getSpecialTreePatchObjectId(String patchType, String locationName) {
+        if (PatchTypes.HARDWOOD.equals(patchType)) {
+            switch (locationName) {
+                case "Fossil Island":
+                    return fossilIslandPatchIndex == 0 ? Constants.FOSSIL_ISLAND_HARDWOOD_EAST_ROOT_OBJECT_ID
+                            : fossilIslandPatchIndex == 1 ? Constants.FOSSIL_ISLAND_HARDWOOD_MIDDLE_ROOT_OBJECT_ID
+                            : Constants.FOSSIL_ISLAND_HARDWOOD_WEST_ROOT_OBJECT_ID;
+                case "Locus Oasis":
+                    return Constants.LOCUS_OASIS_HARDWOOD_ROOT_OBJECT_ID;
+                case "Anglers' Retreat":
+                    return Constants.ANGLERS_RETREAT_HARDWOOD_ROOT_OBJECT_ID;
+                default:
+                    return -1;
+            }
+        }
+        if (PatchTypes.CALQUAT.equals(patchType)) {
+            switch (locationName) {
+                case "Tai Bwo Wannai":
+                    return Constants.TAI_BWO_WANNAI_CALQUAT_ROOT_OBJECT_ID;
+                case "Kastori":
+                    return Constants.KASTORI_CALQUAT_ROOT_OBJECT_ID;
+                case "Great Conch":
+                    return Constants.GREAT_CONCH_CALQUAT_ROOT_OBJECT_ID;
+                default:
+                    return -1;
+            }
+        }
+        return -1;
+    }
+
+    private int getSpecialTreeGardenerNpcId(String patchType, String locationName) {
+        switch (locationName) {
+            case "Fossil Island":
+                return fossilIslandPatchIndex == 0 ? Constants.FOSSIL_ISLAND_HARDWOOD_EAST_GARDENER_NPC_ID
+                        : fossilIslandPatchIndex == 1 ? Constants.FOSSIL_ISLAND_HARDWOOD_MIDDLE_GARDENER_NPC_ID
+                        : Constants.FOSSIL_ISLAND_HARDWOOD_WEST_GARDENER_NPC_ID;
+            case "Locus Oasis":
+                return Constants.LOCUS_OASIS_HARDWOOD_GARDENER_NPC_ID;
+            case "Anglers' Retreat":
+                return Constants.ANGLERS_RETREAT_HARDWOOD_GARDENER_NPC_ID;
+            case "Tai Bwo Wannai":
+                return Constants.TAI_BWO_WANNAI_CALQUAT_GARDENER_NPC_ID;
+            case "Kastori":
+                return Constants.KASTORI_CALQUAT_GARDENER_NPC_ID;
+            case "Great Conch":
+                return Constants.GREAT_CONCH_CALQUAT_GARDENER_NPC_ID;
+            case "Farming Guild":
+                return PatchTypes.REDWOOD.equals(patchType)
+                        ? Constants.FARMING_GUILD_REDWOOD_GARDENER_NPC_ID
+                        : Constants.FARMING_GUILD_CELASTRUS_GARDENER_NPC_ID;
+            default:
+                return -1;
+        }
+    }
+
+    private WorldPoint getSpecialTreePatchPoint(String patchType, String locationName) {
+        switch (locationName) {
+            case "Fossil Island":
+                return getCurrentFossilIslandPatchPoint();
+            case "Locus Oasis":
+                return Constants.LOCUS_OASIS_HARDWOOD_PATCH_POINT;
+            case "Anglers' Retreat":
+                return Constants.ANGLERS_RETREAT_HARDWOOD_PATCH_POINT;
+            case "Tai Bwo Wannai":
+                return Constants.TAI_BWO_WANNAI_CALQUAT_PATCH_POINT;
+            case "Kastori":
+                return Constants.KASTORI_CALQUAT_PATCH_POINT;
+            case "Great Conch":
+                return Constants.GREAT_CONCH_CALQUAT_PATCH_POINT;
+            case "Farming Guild":
+                return PatchTypes.REDWOOD.equals(patchType)
+                        ? Constants.FARMING_GUILD_REDWOOD_PATCH_POINT
+                        : Constants.FARMING_GUILD_CELASTRUS_PATCH_POINT;
+            case "Prifddinas":
+                return Constants.PRIFDDINAS_CRYSTAL_TREE_PATCH_POINT;
+            default:
+                return null;
+        }
+    }
+
+    private String getSpecialTreeName(String patchType) {
+        switch (patchType) {
+            case PatchTypes.HARDWOOD:
+                return "hardwood tree";
+            case PatchTypes.CALQUAT:
+                return "calquat tree";
+            case PatchTypes.CELASTRUS:
+                return "celastrus";
+            case PatchTypes.CRYSTAL_TREE:
+                return "crystal tree";
+            case PatchTypes.REDWOOD:
+                return "redwood tree";
+            default:
+                return "tree";
+        }
+    }
+
     /**
      * Handles tree patch farming steps.
      */
@@ -1480,6 +1818,26 @@ public class FarmingStepHandler {
             // Silently handle any exceptions
         }
     }
+
+    private void setHintArrowToNPC(int npcId) {
+        if (client == null) {
+            return;
+        }
+
+        try {
+            net.runelite.api.IndexedObjectSet<? extends net.runelite.api.NPC> npcs = client.getTopLevelWorldView().npcs();
+            if (npcs != null) {
+                for (net.runelite.api.NPC npc : npcs) {
+                    if (npc != null && npc.getId() == npcId) {
+                        client.setHintArrow(npc);
+                        return;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            // Silently handle any exceptions.
+        }
+    }
     
     /**
      * Sets hint arrow to the first available NPC from a list of NPC names.
@@ -1613,6 +1971,15 @@ public class FarmingStepHandler {
         treePatchComposted = false;
         fruitTreePatchComposted = false;
         hopsPatchComposted = false;
+        specialTreePatchComposted = false;
+    }
+
+    public void resetSpecialTreeStates() {
+        specialTreePatchDone = false;
+        specialTreePatchComposted = false;
+        fossilIslandPatchIndex = 0;
+        fossilIslandPlantStepShown = false;
+        plugin.clearLastMessage();
     }
 }
 

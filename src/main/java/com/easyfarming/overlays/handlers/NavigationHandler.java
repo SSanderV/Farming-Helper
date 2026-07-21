@@ -189,6 +189,27 @@ public class NavigationHandler {
         if ("Kastori".equals(locationName) && Constants.isKastoriRegion(currentRegionId)) {
             return true;
         }
+        if ("Fossil Island".equals(locationName) && Constants.FOSSIL_ISLAND_HARDWOOD_REGION_IDS.contains(currentRegionId)) {
+            return true;
+        }
+        if ("Locus Oasis".equals(locationName) && Constants.LOCUS_OASIS_HARDWOOD_REGION_IDS.contains(currentRegionId)) {
+            return true;
+        }
+        if ("Anglers' Retreat".equals(locationName) && currentRegionId == Constants.REGION_ANGLERS_RETREAT_HARDWOOD) {
+            return true;
+        }
+        if ("Tai Bwo Wannai".equals(locationName) && currentRegionId == Constants.REGION_TAI_BWO_WANNAI_CALQUAT) {
+            return true;
+        }
+        if ("Great Conch".equals(locationName) && Constants.GREAT_CONCH_CALQUAT_REGION_IDS.contains(currentRegionId)) {
+            return true;
+        }
+        if ("Farming Guild".equals(locationName) && Constants.FARMING_GUILD_SPECIAL_TREE_REGION_IDS.contains(currentRegionId)) {
+            return true;
+        }
+        if ("Prifddinas".equals(locationName) && Constants.PRIFDDINAS_CRYSTAL_TREE_REGION_IDS.contains(currentRegionId)) {
+            return true;
+        }
         return false;
     }
 
@@ -213,7 +234,9 @@ public class NavigationHandler {
             case "Farming Guild":
                 return areaCheck.isPlayerWithinArea(new WorldPoint(1238, 3726, 0), 15) ||
                        areaCheck.isPlayerWithinArea(new WorldPoint(1232, 3736, 0), 15) ||
-                       areaCheck.isPlayerWithinArea(new WorldPoint(1243, 3759, 0), 15);
+                       areaCheck.isPlayerWithinArea(new WorldPoint(1243, 3759, 0), 15) ||
+                       areaCheck.isPlayerWithinArea(Constants.FARMING_GUILD_CELASTRUS_PATCH_POINT, 15) ||
+                       areaCheck.isPlayerWithinArea(Constants.FARMING_GUILD_REDWOOD_PATCH_POINT, 15);
             case "Brimhaven":
                 return areaCheck.isPlayerWithinArea(new WorldPoint(2764, 3212, 0), 10);
             case "Gnome Stronghold":
@@ -235,9 +258,24 @@ public class NavigationHandler {
             case "Aldarin":
                 return areaCheck.isPlayerWithinArea(new WorldPoint(1365, 2937, 0), 10);
             case "Kastori":
-                return areaCheck.isPlayerWithinArea(new WorldPoint(1350, 3057, 0), 10);
+                return areaCheck.isPlayerWithinArea(new WorldPoint(1350, 3057, 0), 10) ||
+                       areaCheck.isPlayerWithinArea(Constants.KASTORI_CALQUAT_PATCH_POINT, 10);
             case "Nemus Retreat":
                 return areaCheck.isPlayerWithinArea(new WorldPoint(1366, 3321, 0), 10);
+            case "Fossil Island":
+                return areaCheck.isPlayerWithinArea(Constants.FOSSIL_ISLAND_HARDWOOD_EAST_PATCH_POINT, 10) ||
+                       areaCheck.isPlayerWithinArea(Constants.FOSSIL_ISLAND_HARDWOOD_MIDDLE_PATCH_POINT, 10) ||
+                       areaCheck.isPlayerWithinArea(Constants.FOSSIL_ISLAND_HARDWOOD_WEST_PATCH_POINT, 10);
+            case "Locus Oasis":
+                return areaCheck.isPlayerWithinArea(Constants.LOCUS_OASIS_HARDWOOD_PATCH_POINT, 10);
+            case "Anglers' Retreat":
+                return areaCheck.isPlayerWithinArea(Constants.ANGLERS_RETREAT_HARDWOOD_PATCH_POINT, 10);
+            case "Tai Bwo Wannai":
+                return areaCheck.isPlayerWithinArea(Constants.TAI_BWO_WANNAI_CALQUAT_PATCH_POINT, 10);
+            case "Great Conch":
+                return areaCheck.isPlayerWithinArea(Constants.GREAT_CONCH_CALQUAT_PATCH_POINT, 10);
+            case "Prifddinas":
+                return areaCheck.isPlayerWithinArea(Constants.PRIFDDINAS_CRYSTAL_TREE_PATCH_POINT, 10);
             default:
                 return false;
         }

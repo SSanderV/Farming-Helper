@@ -83,6 +83,45 @@ public class PatchHighlighter {
     public void highlightSpecificFruitTreePatch(Graphics2D graphics, int objectId, Color color) {
         gameObjectHighlighter.renderGameObjectHighlight(graphics, objectId, color);
     }
+
+    public void highlightSpecificSpecialTreePatch(Graphics2D graphics, int objectId, Color color) {
+        gameObjectHighlighter.renderGameObjectHighlight(graphics, objectId, color);
+    }
+
+    public void highlightSpecialTreePatch(String locationName, String patchType, Graphics2D graphics, Color color) {
+        if (PatchTypes.HARDWOOD.equals(patchType)) {
+            switch (locationName) {
+                case "Fossil Island":
+                    gameObjectHighlighter.renderGameObjectHighlight(graphics, Constants.FOSSIL_ISLAND_HARDWOOD_EAST_ROOT_OBJECT_ID, color);
+                    gameObjectHighlighter.renderGameObjectHighlight(graphics, Constants.FOSSIL_ISLAND_HARDWOOD_MIDDLE_ROOT_OBJECT_ID, color);
+                    gameObjectHighlighter.renderGameObjectHighlight(graphics, Constants.FOSSIL_ISLAND_HARDWOOD_WEST_ROOT_OBJECT_ID, color);
+                    return;
+                case "Locus Oasis":
+                    gameObjectHighlighter.renderGameObjectHighlight(graphics, Constants.LOCUS_OASIS_HARDWOOD_ROOT_OBJECT_ID, color);
+                    return;
+                case "Anglers' Retreat":
+                    gameObjectHighlighter.renderGameObjectHighlight(graphics, Constants.ANGLERS_RETREAT_HARDWOOD_ROOT_OBJECT_ID, color);
+                    return;
+                default:
+                    return;
+            }
+        }
+        if (PatchTypes.CALQUAT.equals(patchType)) {
+            switch (locationName) {
+                case "Tai Bwo Wannai":
+                    gameObjectHighlighter.renderGameObjectHighlight(graphics, Constants.TAI_BWO_WANNAI_CALQUAT_ROOT_OBJECT_ID, color);
+                    return;
+                case "Kastori":
+                    gameObjectHighlighter.renderGameObjectHighlight(graphics, Constants.KASTORI_CALQUAT_ROOT_OBJECT_ID, color);
+                    return;
+                case "Great Conch":
+                    gameObjectHighlighter.renderGameObjectHighlight(graphics, Constants.GREAT_CONCH_CALQUAT_ROOT_OBJECT_ID, color);
+                    return;
+                default:
+                    return;
+            }
+        }
+    }
     
     public void highlightHopsPatches(Graphics2D graphics, Color color) {
         for (Integer patchId : farmingHelperOverlay.getHopsPatchIds()) {
@@ -188,6 +227,13 @@ public class PatchHighlighter {
                 if (isHopsLocation(locationName)) {
                     highlightPatchForLocation(locationName, patchType, graphics, leftClickColor);
                 }
+                break;
+            case PatchTypes.HARDWOOD:
+            case PatchTypes.CALQUAT:
+            case PatchTypes.CELASTRUS:
+            case PatchTypes.CRYSTAL_TREE:
+            case PatchTypes.REDWOOD:
+                highlightSpecialTreePatch(locationName, patchType, graphics, leftClickColor);
                 break;
             default:
                 break;
