@@ -4,6 +4,7 @@ import com.easyfarming.EasyFarmingPlugin;
 import com.easyfarming.customrun.LocationCatalog;
 import com.easyfarming.customrun.PatchTypes;
 import com.easyfarming.customrun.RunLocation;
+import net.runelite.api.gameval.ItemID;
 import net.runelite.client.ui.ColorScheme;
 import net.runelite.client.ui.FontManager;
 import net.runelite.client.game.ItemManager;
@@ -228,6 +229,11 @@ public class CustomRunLocationSubPanel extends JPanel {
             case PatchTypes.TREE: return net.runelite.api.gameval.ItemID.YEW_LOGS;
             case PatchTypes.FRUIT_TREE: return net.runelite.api.gameval.ItemID.PINEAPPLE;
             case PatchTypes.HOPS: return net.runelite.api.gameval.ItemID.BARLEY;
+            case PatchTypes.HARDWOOD: return ItemID.MAHOGANY_LOGS;
+            case PatchTypes.CALQUAT: return ItemID.CALQUAT_TREE_SEED;
+            case PatchTypes.CELASTRUS: return ItemID.CELASTRUS_TREE_SEED;
+            case PatchTypes.CRYSTAL_TREE: return ItemID.CRYSTAL_TREE_SEED;
+            case PatchTypes.REDWOOD: return ItemID.REDWOOD_TREE_SEED;
             default: return GRIMY_RANARR_WEED;
         }
     }
@@ -240,6 +246,11 @@ public class CustomRunLocationSubPanel extends JPanel {
             case PatchTypes.TREE: return "Tree";
             case PatchTypes.FRUIT_TREE: return "Fruit tree";
             case PatchTypes.HOPS: return "Hops";
+            case PatchTypes.HARDWOOD: return "Hardwood";
+            case PatchTypes.CALQUAT: return "Calquat";
+            case PatchTypes.CELASTRUS: return "Celastrus";
+            case PatchTypes.CRYSTAL_TREE: return "Crystal tree";
+            case PatchTypes.REDWOOD: return "Redwood";
             default: return patchType.replace("_", " ");
         }
     }
