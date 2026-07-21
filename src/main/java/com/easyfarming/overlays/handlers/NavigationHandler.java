@@ -178,7 +178,8 @@ public class NavigationHandler {
     private static boolean requiresQuetzalFromCivitas(String locationName) {
         return "Kastori".equals(locationName)
                 || "Nemus Retreat".equals(locationName)
-                || "Aldarin".equals(locationName);
+                || "Aldarin".equals(locationName)
+                || "Locus Oasis".equals(locationName);
     }
 
     private static boolean isInTeleportRegion(String locationName, int teleportRegionId, int currentRegionId) {
@@ -477,6 +478,9 @@ public class NavigationHandler {
                     break;
                 case "Farming Guild":
                     widgetHighlighter.highlightDynamicComponent(graphics, widget, widgetHelper.getChildIndexSpiritTree("Farming Guild"));
+                    break;
+                case "Prifddinas":
+                    widgetHighlighter.highlightDynamicComponent(graphics, widget, widgetHelper.getChildIndexSpiritTree("Prifddinas"));
                     break;
             }
         }
