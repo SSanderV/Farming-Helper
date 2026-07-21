@@ -105,7 +105,11 @@ public class SpecialTreeLocationCatalogTest {
         assertDescriptionContains("Anglers' Retreat", "Fishing_Trawler", "Port Khazard");
         assertDescriptionContains("Anglers' Retreat", "Fishing_Trawler", "Corsair Cove");
         assertDescriptionContains("Anglers' Retreat", "Rimmington_POH", "house is in Rimmington");
-        assertDescriptionContains("Anglers' Retreat", "Rimmington_POH", "Port Sarim");
+        assertDescriptionContains("Anglers' Retreat", "Rimmington_POH", "Cabin Boy Colin");
+        assertDescriptionContains("Anglers' Retreat", "Rimmington_POH", "Corsair Cove");
+        assertDescriptionContains("Anglers' Retreat", "Rimmington_POH", "The Corsair Curse");
+        assertDescriptionDoesNotContain("Anglers' Retreat", "Rimmington_POH", "charter");
+        assertDescriptionDoesNotContain("Anglers' Retreat", "Rimmington_POH", "Port Sarim");
         assertDescriptionContains("Anglers' Retreat", "Sailors_amulet", "The Pandemonium");
         assertDescriptionContains("Anglers' Retreat", "Sailors_amulet", "Deepfin Point");
         assertDescriptionContains("Anglers' Retreat", "Spirit_Tree", "Feldip Hills");
@@ -178,6 +182,10 @@ public class SpecialTreeLocationCatalogTest {
 
     private void assertDescriptionContains(String locationName, String option, String expectedText) {
         assertTrue(teleport(locationName, PatchTypes.HARDWOOD, option).getDescription().contains(expectedText));
+    }
+
+    private void assertDescriptionDoesNotContain(String locationName, String option, String unexpectedText) {
+        assertFalse(teleport(locationName, PatchTypes.HARDWOOD, option).getDescription().contains(unexpectedText));
     }
 
     private static class TestPlugin extends EasyFarmingPlugin {

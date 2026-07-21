@@ -28,6 +28,7 @@ import java.util.List;
 public class FarmingStepHandler {
     /** Hint arrow toward the current patch tile when farther than this (tiles); does not gate instructions. */
     private static final int PATCH_HINT_ARROW_RANGE_TILES = 15;
+    private static final int REDWOOD_HINT_ARROW_RANGE_TILES = 5;
 
     private final Client client;
     private final EasyFarmingPlugin plugin;
@@ -1151,7 +1152,12 @@ public class FarmingStepHandler {
                 break;
         }
 
-        applyPatchDirectionHintArrow(getSpecialTreePatchPoint(patchType, locationName));
+        WorldPoint patchPoint = getSpecialTreePatchPoint(patchType, locationName);
+        if (PatchTypes.REDWOOD.equals(patchType)) {
+            applyPatchDirectionHintArrow(patchPoint, REDWOOD_HINT_ARROW_RANGE_TILES);
+        } else {
+            applyPatchDirectionHintArrow(patchPoint);
+        }
     }
 
     private boolean handleSpecialTreeAftercare(Graphics2D graphics, String patchType, String locationName, Color useItemColor) {
@@ -1659,6 +1665,19 @@ public class FarmingStepHandler {
             return;
         }
         if (areaCheck.isPlayerWithinArea(patchWorldPoint, PATCH_HINT_ARROW_RANGE_TILES)) {
+            return;
+        }
+        setHintArrow(patchWorldPoint);
+    }
+
+    private void applyPatchDirectionHintArrow(WorldPoint patchWorldPoint, int clearRangeTiles) {
+        if (patchWorldPoint == null || client.getLocalPlayer() == null) {
+            return;
+        }
+        if (areaCheck.isPlayerWithinArea(patchWorldPoint, clearRangeTiles)) {
+            if (patchWorldPoint.equals(client.getHintArrowPoint())) {
+                clearHintArrow();
+            }
             return;
         }
         setHintArrow(patchWorldPoint);

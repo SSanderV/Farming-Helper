@@ -139,6 +139,12 @@ public class CustomRunLocationSubPanel extends JPanel {
         refreshPatchIcons();
     }
 
+    @Override
+    public Dimension getMaximumSize() {
+        Dimension preferred = getPreferredSize();
+        return new Dimension(Integer.MAX_VALUE, preferred.height);
+    }
+
     private void toggleExpanded() {
         expanded = !expanded;
         contentPanel.setVisible(expanded);

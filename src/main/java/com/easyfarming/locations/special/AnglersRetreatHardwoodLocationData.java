@@ -26,7 +26,7 @@ public final class AnglersRetreatHardwoodLocationData {
                 Collections.emptyList()));
         location.addTeleportOption(new Teleport(
                 "Rimmington_POH", Teleport.Category.MOUNTED_POH,
-                "Teleport to your house if your house is in Rimmington, exit, run east to the Port Sarim charter ship, charter to Corsair Cove, then use the repaired rowboat to Anglers' Retreat.",
+                "Teleport to your house if your house is in Rimmington, exit, run west and ask Cabin Boy Colin to take you to Corsair Cove (requires The Corsair Curse), then run to the repaired rowboat and row to Anglers' Retreat.",
                 ObjectID.POH_EXIT_PORTAL, "", 0, 0,
                 Constants.ANGLERS_RETREAT_HARDWOOD_PATCH_POINT.getRegionID(), Constants.ANGLERS_RETREAT_HARDWOOD_PATCH_POINT,
                 houseTeleportSupplier.get()));
