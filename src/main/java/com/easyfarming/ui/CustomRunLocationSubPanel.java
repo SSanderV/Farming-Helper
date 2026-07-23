@@ -32,7 +32,7 @@ public class CustomRunLocationSubPanel extends JPanel {
     private final Runnable onChanged;
 
     private final JComboBox<String> teleportCombo;
-    private final JPanel patchIconsPanel = new JPanel(new WrapLayout(FlowLayout.LEFT, 6, 4));
+    private final JPanel patchIconsPanel;
     private final JPanel contentPanel = new JPanel(new BorderLayout());
     private boolean expanded = false;
     private final JLabel expandCollapseLabel = new JLabel("\u25B6");
@@ -52,6 +52,13 @@ public class CustomRunLocationSubPanel extends JPanel {
         this.locationName = locationName;
         this.runLocation = runLocation;
         this.onChanged = onChanged;
+        boolean farmingGuild = "Farming Guild".equals(locationName);
+        patchIconsPanel = new JPanel(farmingGuild
+                ? new GridLayout(0, 5, 6, 4)
+                : new WrapLayout(FlowLayout.LEFT, 6, 4));
+        if (farmingGuild) {
+            patchIconsPanel.setBorder(new EmptyBorder(4, 6, 4, 6));
+        }
 
         runLocation.setLocationName(locationName);
 
@@ -107,7 +114,14 @@ public class CustomRunLocationSubPanel extends JPanel {
 
         contentPanel.setOpaque(false);
         patchIconsPanel.setOpaque(false);
-        contentPanel.add(patchIconsPanel, BorderLayout.CENTER);
+        if (farmingGuild) {
+            JPanel patchIconsWrapper = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+            patchIconsWrapper.setOpaque(false);
+            patchIconsWrapper.add(patchIconsPanel);
+            contentPanel.add(patchIconsWrapper, BorderLayout.CENTER);
+        } else {
+            contentPanel.add(patchIconsPanel, BorderLayout.CENTER);
+        }
 
         JPanel teleportRow = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 6));
         teleportRow.setOpaque(false);
